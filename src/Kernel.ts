@@ -47,8 +47,10 @@ export default class Kernel implements KernelContract {
         });
     }
 
-    protected registerDefaults() {
-        this.client.registry.registerDefaults();
+    protected registerDefaults(commandOptions?: { help?: boolean, prefix?: boolean, eval_?: boolean, ping?: boolean, commandState?: boolean }) {
+        this.client.registry.registerDefaultTypes();
+        this.client.registry.registerDefaultGroups();
+        this.client.registry.registerDefaultCommands(commandOptions);
     }
 
     public async bootstrap(): Promise<void> {
