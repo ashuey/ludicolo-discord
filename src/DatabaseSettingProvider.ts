@@ -1,4 +1,4 @@
-import {CommandoClient, SettingProvider, GuildExtension} from 'discord.js-commando'
+import {CommandoClient, SettingProvider, CommandoGuild} from 'discord.js-commando'
 import {Guild} from "discord.js";
 import DatabaseManager from "@ashuey/ludicolo-framework/lib/Contracts/Database/DatabaseManager";
 import {updateOrInsert} from "@ashuey/ludicolo-framework/lib/Database/util";
@@ -61,7 +61,7 @@ export default class DatabaseSettingProvider extends SettingProvider {
     protected initializeListeners(): void {
         // Listen for changes
         this.listeners
-            .set('commandPrefixChange', (guild, prefix) => this.set(guild, 'prefix', prefix))
+            .set('commandPrefixChange', (guild?: CommandoGuild, prefix?: string) => this.set(guild, 'prefix', prefix))
             .set('ready', () => this.initializeExistingGuilds());
         for (const [event, listener] of this.listeners) this.client.on(event, listener);
     }
@@ -70,8 +70,7 @@ export default class DatabaseSettingProvider extends SettingProvider {
         const guildPrefixes = await this.db.table('settings').where('key', 'prefix');
 
         for (const guildPrefix of guildPrefixes) {
-            // @ts-ignore
-            const guild: GuildExtension = this.client.guilds.get(guildPrefix.guild);
+            const guild: CommandoGuild = (await this.client.guilds.resolve(guildPrefix.guild)) as CommandoGuild;
             guild.commandPrefix = JSON.parse(guildPrefix.value);
         }
     }

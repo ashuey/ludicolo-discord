@@ -7,7 +7,6 @@ export default class DiscordServiceProvider extends ServiceProvider {
     register() {
         this.app.singleton('discord.client', async database_setting_provider => {
             const client = new CommandoClient({
-                unknownCommandResponse: config('discord.unknownCommandResponse'),
                 owner: config('discord.owner')
             });
 

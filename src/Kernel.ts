@@ -29,7 +29,7 @@ export default class Kernel implements KernelContract {
 
     public async startListening(): Promise<void> {
         await this.client.login(config('discord.token'));
-        console.log(`Connected to gateway. Online and listening in ${this.client.guilds.size} guilds`);
+        console.log(`Connected to gateway. Online and listening in ${this.client.guilds.cache.size} guilds`);
     }
 
     // noinspection JSMethodCanBeStatic
@@ -47,7 +47,7 @@ export default class Kernel implements KernelContract {
         });
     }
 
-    protected registerDefaults(commandOptions?: { help?: boolean, prefix?: boolean, eval_?: boolean, ping?: boolean, commandState?: boolean }) {
+    protected registerDefaults(commandOptions?: { help?: boolean, prefix?: boolean, eval?: boolean, ping?: boolean, commandState?: boolean, unknownCommand?: boolean }) {
         this.client.registry.registerDefaultTypes();
         this.client.registry.registerDefaultGroups();
         this.client.registry.registerDefaultCommands(commandOptions);
